@@ -5,44 +5,35 @@ import { PrimaryButton, SecondaryButton } from '../common/Button';
 
 export const Hero: React.FC = () => {
   const [isDetecting, setIsDetecting] = useState(false);
-  const animatingRef = useRef(false);
-  const lastTriggerTimeRef = useRef(0);
   const timeoutRef = useRef<number | null>(null);
 
-  // Trigger the 1.8s detection sequence with throttle protection
+  // Trigger the 1.8s detection sequence cleanly on click/hover
   const triggerDetection = useCallback(() => {
-    const now = Date.now();
-    // Guard against re-triggering while running or rapid-fire clicking
-    if (animatingRef.current || now - lastTriggerTimeRef.current < 1850) {
-      return;
-    }
-
-    lastTriggerTimeRef.current = now;
-    animatingRef.current = true;
-    setIsDetecting(true);
-
     if (timeoutRef.current) {
       clearTimeout(timeoutRef.current);
     }
 
-    timeoutRef.current = window.setTimeout(() => {
-      setIsDetecting(false);
-      animatingRef.current = false;
-    }, 1800);
+    setIsDetecting(false);
+
+    // Force browser repaint to ensure animation re-triggers on each click
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        setIsDetecting(true);
+        timeoutRef.current = window.setTimeout(() => {
+          setIsDetecting(false);
+        }, 1800);
+      });
+    });
   }, []);
 
-  // Pointer enter for desktop mouse hover
-  const handlePointerEnter = useCallback(
-    (e: React.PointerEvent) => {
-      if (e.pointerType === 'mouse') {
-        triggerDetection();
-      }
-    },
-    [triggerDetection]
-  );
+  // Desktop mouse hover
+  const handleMouseEnter = useCallback(() => {
+    triggerDetection();
+  }, [triggerDetection]);
 
-  // Click handler for mobile/tablet tap and desktop click
-  const handleClick = useCallback(() => {
+  // Click handler for mobile, tablet, and desktop click
+  const handleClick = useCallback((e: React.MouseEvent) => {
+    e.stopPropagation();
     triggerDetection();
   }, [triggerDetection]);
 
@@ -83,11 +74,11 @@ export const Hero: React.FC = () => {
           <div className="hero-visual-col animate-hero-alien">
             <div
               className={`alien-interactive-container ${isDetecting ? 'is-detecting' : ''}`}
-              onPointerEnter={handlePointerEnter}
               onClick={handleClick}
+              onMouseEnter={handleMouseEnter}
               role="button"
               tabIndex={0}
-              aria-label="SabKuch AI Alien Symbol - Tap or hover to scan"
+              aria-label="SabKuch AI Alien Symbol - Click or hover to scan"
               onKeyDown={(e) => {
                 if (e.key === 'Enter' || e.key === ' ') {
                   e.preventDefault();
