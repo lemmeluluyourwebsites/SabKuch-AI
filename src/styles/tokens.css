@@ -133,8 +133,8 @@
   /* ==================================================
      08. ALIEN DETECTION INTERACTION TOKENS
      ================================================== */
-  --alien-detection-duration: 1.8s;
-  --alien-scan-duration: 0.72s;
+  --alien-detection-duration: 2.6s;
+  --alien-scan-duration: 1.35s;
   --alien-scan-opacity: 0.95;
   --alien-hover-glow: rgba(133, 254, 1, 0.42);
 }

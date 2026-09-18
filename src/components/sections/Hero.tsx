@@ -7,7 +7,7 @@ export const Hero: React.FC = () => {
   const [isDetecting, setIsDetecting] = useState(false);
   const timeoutRef = useRef<number | null>(null);
 
-  // Trigger the 1.8s detection sequence cleanly on click/hover
+  // Trigger the 2.6s detection sequence cleanly on click/hover
   const triggerDetection = useCallback(() => {
     if (timeoutRef.current) {
       clearTimeout(timeoutRef.current);
@@ -21,7 +21,7 @@ export const Hero: React.FC = () => {
         setIsDetecting(true);
         timeoutRef.current = window.setTimeout(() => {
           setIsDetecting(false);
-        }, 1800);
+        }, 2600);
       });
     });
   }, []);

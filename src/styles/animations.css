@@ -142,16 +142,16 @@
     opacity: 0;
     transform: translate(-50%, 8px);
   }
-  /* Keep completely hidden while the scan line sweeps through the full photo */
-  38% {
+  /* Keep completely hidden while the slow deliberate scan sweeps through the full photo */
+  51% {
     opacity: 0;
     transform: translate(-50%, 8px);
   }
-  45% {
+  58% {
     opacity: 1;
     transform: translate(-50%, 0);
   }
-  84% {
+  86% {
     opacity: 1;
     transform: translate(-50%, 0);
   }
