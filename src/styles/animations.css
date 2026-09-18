@@ -122,17 +122,17 @@
 
 @keyframes alienOpticalScan {
   0% {
-    transform: translateY(-100%);
+    top: -40px;
     opacity: 0;
   }
-  8% {
+  6% {
     opacity: var(--alien-scan-opacity);
   }
-  88% {
+  92% {
     opacity: var(--alien-scan-opacity);
   }
   100% {
-    transform: translateY(calc(100% + 40px));
+    top: calc(100% + 8px);
     opacity: 0;
   }
 }
@@ -140,13 +140,14 @@
 @keyframes alienStatusFadeInOut {
   0% {
     opacity: 0;
-    transform: translate(-50%, 6px);
+    transform: translate(-50%, 8px);
   }
-  40% {
+  /* Keep completely hidden while the scan line sweeps through the full photo */
+  38% {
     opacity: 0;
-    transform: translate(-50%, 6px);
+    transform: translate(-50%, 8px);
   }
-  52% {
+  45% {
     opacity: 1;
     transform: translate(-50%, 0);
   }

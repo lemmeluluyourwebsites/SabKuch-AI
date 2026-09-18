@@ -9,11 +9,11 @@ export const Hero: React.FC = () => {
   const lastTriggerTimeRef = useRef(0);
   const timeoutRef = useRef<number | null>(null);
 
-  // Trigger the 1.25s detection sequence with throttle protection
+  // Trigger the 1.8s detection sequence with throttle protection
   const triggerDetection = useCallback(() => {
     const now = Date.now();
     // Guard against re-triggering while running or rapid-fire clicking
-    if (animatingRef.current || now - lastTriggerTimeRef.current < 1300) {
+    if (animatingRef.current || now - lastTriggerTimeRef.current < 1850) {
       return;
     }
 
@@ -28,7 +28,7 @@ export const Hero: React.FC = () => {
     timeoutRef.current = window.setTimeout(() => {
       setIsDetecting(false);
       animatingRef.current = false;
-    }, 1250);
+    }, 1800);
   }, []);
 
   // Pointer enter for desktop mouse hover
@@ -204,6 +204,7 @@ export const Hero: React.FC = () => {
           justify-content: center;
           cursor: pointer;
           user-select: none;
+          touch-action: manipulation;
           -webkit-tap-highlight-color: transparent;
           outline: none;
           border-radius: var(--radius-lg);
@@ -300,21 +301,20 @@ export const Hero: React.FC = () => {
           pointer-events: none;
         }
 
-        /* Scan Beam: Elegant thin optical line with trailing luminescence */
+        /* Scan Beam: Elegant optical line with trailing luminescence */
         .alien-scan-beam {
           position: absolute;
-          top: 0;
+          top: -40px;
           left: 0;
           right: 0;
-          height: 34px;
+          height: 38px;
           pointer-events: none;
           z-index: 5;
           opacity: 0;
-          transform: translateY(-100%);
           display: flex;
           flex-direction: column;
           justify-content: flex-end;
-          will-change: transform, opacity;
+          will-change: top, opacity;
         }
 
         .alien-scan-beam::before {
@@ -324,24 +324,24 @@ export const Hero: React.FC = () => {
           background: linear-gradient(
             180deg,
             transparent 0%,
-            rgba(133, 254, 1, 0.03) 40%,
-            rgba(133, 254, 1, 0.2) 100%
+            rgba(133, 254, 1, 0.04) 30%,
+            rgba(133, 254, 1, 0.28) 100%
           );
         }
 
         .alien-scan-line {
           width: 100%;
-          height: 1.5px;
+          height: 2px;
           background: linear-gradient(
             90deg,
             transparent 0%,
-            rgba(133, 254, 1, 0.35) 15%,
+            rgba(133, 254, 1, 0.4) 10%,
             #85fe01 50%,
-            rgba(133, 254, 1, 0.35) 85%,
+            rgba(133, 254, 1, 0.4) 90%,
             transparent 100%
           );
-          box-shadow: 0 0 10px rgba(133, 254, 1, 0.85),
-                      0 0 3px #ffffff;
+          box-shadow: 0 0 14px rgba(133, 254, 1, 0.95),
+                      0 0 4px #ffffff;
           position: relative;
           z-index: 1;
         }
@@ -351,7 +351,7 @@ export const Hero: React.FC = () => {
           position: absolute;
           top: calc(100% + 10px);
           left: 50%;
-          transform: translate(-50%, 6px);
+          transform: translate(-50%, 8px);
           opacity: 0;
           pointer-events: none;
           z-index: 10;
@@ -389,26 +389,11 @@ export const Hero: React.FC = () => {
         }
 
         .is-detecting .alien-scan-beam {
-          animation: alienOpticalScan var(--alien-scan-duration) cubic-bezier(0.25, 1, 0.5, 1) var(--alien-scan-delay) forwards;
+          animation: alienOpticalScan var(--alien-scan-duration) cubic-bezier(0.35, 0, 0.25, 1) forwards;
         }
 
         .is-detecting .alien-status-badge {
           animation: alienStatusFadeInOut var(--alien-detection-duration) ease forwards;
-        }
-
-        /* Reduced Motion Override */
-        @media (prefers-reduced-motion: reduce) {
-          .is-detecting .alien-scan-beam {
-            display: none !important;
-          }
-          .is-detecting .alien-frame {
-            animation: none !important;
-          }
-          .is-detecting .alien-status-badge {
-            animation: none !important;
-            opacity: 1 !important;
-            transition: opacity 180ms ease;
-          }
         }
 
         /* Tablet and Mobile Layout (<= 1024px) */
