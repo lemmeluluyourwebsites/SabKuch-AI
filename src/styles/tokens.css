@@ -129,4 +129,14 @@
   --z-nav: 100;
   --z-modal: 200;
   --z-toast: 300;
+
+  /* ==================================================
+     08. ALIEN DETECTION INTERACTION TOKENS
+     ================================================== */
+  --alien-detection-duration: 1.25s;
+  --alien-scan-duration: 0.53s;
+  --alien-scan-delay: 0.12s;
+  --alien-scan-opacity: 0.85;
+  --alien-hover-glow: rgba(133, 254, 1, 0.38);
+  --alien-status-duration: 0.55s;
 }

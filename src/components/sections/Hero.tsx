@@ -1,9 +1,60 @@
-import React from 'react';
+import React, { useState, useRef, useCallback, useEffect } from 'react';
 import { BRAND_CONFIG, BRAND_ASSETS } from '../../config/brand';
 import { Container } from '../common/Container';
 import { PrimaryButton, SecondaryButton } from '../common/Button';
 
 export const Hero: React.FC = () => {
+  const [isDetecting, setIsDetecting] = useState(false);
+  const animatingRef = useRef(false);
+  const lastTriggerTimeRef = useRef(0);
+  const timeoutRef = useRef<number | null>(null);
+
+  // Trigger the 1.25s detection sequence with throttle protection
+  const triggerDetection = useCallback(() => {
+    const now = Date.now();
+    // Guard against re-triggering while running or rapid-fire clicking
+    if (animatingRef.current || now - lastTriggerTimeRef.current < 1300) {
+      return;
+    }
+
+    lastTriggerTimeRef.current = now;
+    animatingRef.current = true;
+    setIsDetecting(true);
+
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+    }
+
+    timeoutRef.current = window.setTimeout(() => {
+      setIsDetecting(false);
+      animatingRef.current = false;
+    }, 1250);
+  }, []);
+
+  // Pointer enter for desktop mouse hover
+  const handlePointerEnter = useCallback(
+    (e: React.PointerEvent) => {
+      if (e.pointerType === 'mouse') {
+        triggerDetection();
+      }
+    },
+    [triggerDetection]
+  );
+
+  // Click handler for mobile/tablet tap and desktop click
+  const handleClick = useCallback(() => {
+    triggerDetection();
+  }, [triggerDetection]);
+
+  // Clean up any pending timer on unmount
+  useEffect(() => {
+    return () => {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
+    };
+  }, []);
+
   return (
     <section className="section section-first hero-section" id="hero">
       <Container>
@@ -28,16 +79,46 @@ export const Hero: React.FC = () => {
             </h1>
           </div>
 
-          {/* Right Column (Right on Desktop, Top-Right on Mobile/Tab): Alien Silhouette */}
+          {/* Right Column: Signature Alien with Interactive Detection Micro-interaction */}
           <div className="hero-visual-col animate-hero-alien">
-            <div className="alien-glow-halo" />
-            <div className="alien-frame">
-              <img
-                src={BRAND_ASSETS.logo}
-                alt="SabKuch AI Alien Identity"
-                className="alien-hero-img"
-                loading="eager"
-              />
+            <div
+              className={`alien-interactive-container ${isDetecting ? 'is-detecting' : ''}`}
+              onPointerEnter={handlePointerEnter}
+              onClick={handleClick}
+              role="button"
+              tabIndex={0}
+              aria-label="SabKuch AI Alien Symbol - Tap or hover to scan"
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  e.preventDefault();
+                  triggerDetection();
+                }
+              }}
+            >
+              {/* Outer atmospheric aura */}
+              <div className="alien-glow-halo" aria-hidden="true" />
+
+              {/* Alien Frame maintaining exact geometry, crop, and silhouette */}
+              <div className="alien-frame">
+                <img
+                  src={BRAND_ASSETS.logo}
+                  alt="SabKuch AI Alien Identity"
+                  className="alien-hero-img"
+                  loading="eager"
+                  draggable={false}
+                />
+
+                {/* Ultra-fine optical scan beam (0.12s - 0.65s) */}
+                <div className="alien-scan-beam" aria-hidden="true">
+                  <div className="alien-scan-line" />
+                </div>
+              </div>
+
+              {/* Status Message Badge: ● ALIEN DETECTED (0.50s - 1.25s) */}
+              <div className="alien-status-badge" aria-live="polite">
+                <span className="status-dot">●</span>
+                <span>ALIEN DETECTED</span>
+              </div>
             </div>
           </div>
 
@@ -114,6 +195,25 @@ export const Hero: React.FC = () => {
           justify-content: center;
         }
 
+        /* Interactive Alien Container */
+        .alien-interactive-container {
+          position: relative;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          cursor: pointer;
+          user-select: none;
+          -webkit-tap-highlight-color: transparent;
+          outline: none;
+          border-radius: var(--radius-lg);
+        }
+
+        .alien-interactive-container:focus-visible {
+          outline: 2px solid var(--color-primary);
+          outline-offset: 6px;
+        }
+
         .hero-details-block {
           grid-area: details;
         }
@@ -152,6 +252,7 @@ export const Hero: React.FC = () => {
           gap: var(--space-4);
         }
 
+        /* Ambient Halo */
         .alien-glow-halo {
           position: absolute;
           width: 320px;
@@ -166,8 +267,11 @@ export const Hero: React.FC = () => {
           filter: blur(48px);
           pointer-events: none;
           z-index: 1;
+          opacity: 0.7;
+          transition: opacity var(--duration-normal) var(--ease-standard);
         }
 
+        /* Alien Frame maintaining exact geometry */
         .alien-frame {
           position: relative;
           z-index: 2;
@@ -183,19 +287,128 @@ export const Hero: React.FC = () => {
           box-shadow: 0 20px 60px rgba(0, 0, 0, 0.9),
                       0 0 45px rgba(133, 254, 1, 0.12);
           border: 1px solid rgba(255, 255, 255, 0.05);
+          transition: border-color var(--duration-fast) var(--ease-standard);
         }
 
+        /* Alien image strictly static on idle */
         .alien-hero-img {
           width: 100%;
           height: 100%;
           object-fit: cover;
           display: block;
           filter: contrast(1.05) brightness(1.02);
-          transition: transform 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+          pointer-events: none;
         }
 
-        .alien-frame:hover .alien-hero-img {
-          transform: scale(1.03);
+        /* Scan Beam: Elegant thin optical line with trailing luminescence */
+        .alien-scan-beam {
+          position: absolute;
+          top: 0;
+          left: 0;
+          right: 0;
+          height: 34px;
+          pointer-events: none;
+          z-index: 5;
+          opacity: 0;
+          transform: translateY(-100%);
+          display: flex;
+          flex-direction: column;
+          justify-content: flex-end;
+          will-change: transform, opacity;
+        }
+
+        .alien-scan-beam::before {
+          content: '';
+          position: absolute;
+          inset: 0;
+          background: linear-gradient(
+            180deg,
+            transparent 0%,
+            rgba(133, 254, 1, 0.03) 40%,
+            rgba(133, 254, 1, 0.2) 100%
+          );
+        }
+
+        .alien-scan-line {
+          width: 100%;
+          height: 1.5px;
+          background: linear-gradient(
+            90deg,
+            transparent 0%,
+            rgba(133, 254, 1, 0.35) 15%,
+            #85fe01 50%,
+            rgba(133, 254, 1, 0.35) 85%,
+            transparent 100%
+          );
+          box-shadow: 0 0 10px rgba(133, 254, 1, 0.85),
+                      0 0 3px #ffffff;
+          position: relative;
+          z-index: 1;
+        }
+
+        /* System Status Label: ● ALIEN DETECTED */
+        .alien-status-badge {
+          position: absolute;
+          top: calc(100% + 10px);
+          left: 50%;
+          transform: translate(-50%, 6px);
+          opacity: 0;
+          pointer-events: none;
+          z-index: 10;
+          font-family: var(--font-mono);
+          font-size: var(--text-micro);
+          letter-spacing: 0.18em;
+          color: var(--color-primary);
+          display: flex;
+          align-items: center;
+          gap: 6px;
+          text-transform: uppercase;
+          background: rgba(6, 7, 7, 0.88);
+          padding: 3px 10px;
+          border-radius: var(--radius-xs);
+          border: 1px solid rgba(133, 254, 1, 0.24);
+          backdrop-filter: blur(8px);
+          white-space: nowrap;
+          box-shadow: 0 4px 16px rgba(0, 0, 0, 0.6);
+          will-change: opacity, transform;
+        }
+
+        .status-dot {
+          font-size: 7px;
+          color: var(--color-primary);
+          filter: drop-shadow(0 0 5px var(--color-primary));
+        }
+
+        /* ACTIVE DETECTION STATE ANIMATIONS */
+        .is-detecting .alien-frame {
+          animation: alienFrameDetectGlow var(--alien-detection-duration) var(--ease-standard) forwards;
+        }
+
+        .is-detecting .alien-glow-halo {
+          animation: alienHaloDetect var(--alien-detection-duration) var(--ease-standard) forwards;
+        }
+
+        .is-detecting .alien-scan-beam {
+          animation: alienOpticalScan var(--alien-scan-duration) cubic-bezier(0.25, 1, 0.5, 1) var(--alien-scan-delay) forwards;
+        }
+
+        .is-detecting .alien-status-badge {
+          animation: alienStatusFadeInOut var(--alien-detection-duration) ease forwards;
+        }
+
+        /* Reduced Motion Override */
+        @media (prefers-reduced-motion: reduce) {
+          .is-detecting .alien-scan-beam {
+            display: none !important;
+          }
+          .is-detecting .alien-frame {
+            animation: none !important;
+          }
+          .is-detecting .alien-status-badge {
+            animation: none !important;
+            opacity: 1 !important;
+            transition: opacity 180ms ease;
+          }
         }
 
         /* Tablet and Mobile Layout (<= 1024px) */
@@ -329,6 +542,13 @@ export const Hero: React.FC = () => {
             width: 100%;
             max-width: 320px;
             padding: 0.75rem 1.25rem;
+          }
+
+          .alien-status-badge {
+            top: calc(100% + 6px);
+            padding: 2px 7px;
+            font-size: 0.625rem;
+            letter-spacing: 0.14em;
           }
         }
       `}</style>

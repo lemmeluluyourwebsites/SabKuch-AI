@@ -7,13 +7,15 @@ interface BrandLogoProps {
   size?: 'sm' | 'md' | 'lg' | 'xl';
   showWordmark?: boolean;
   glow?: boolean;
+  gap?: string;
 }
 
 export const BrandLogo: React.FC<BrandLogoProps> = ({
   className = '',
   size = 'md',
   showWordmark = true,
-  glow = true
+  glow = true,
+  gap
 }) => {
   const dimensions = {
     sm: 28,
@@ -29,13 +31,20 @@ export const BrandLogo: React.FC<BrandLogoProps> = ({
     xl: 'lg' as const
   };
 
+  const defaultGap = {
+    sm: '0.25rem',
+    md: '0.375rem',
+    lg: '0.45rem',
+    xl: '0.6rem'
+  }[size];
+
   return (
     <div
       className={`brand-logo-container ${className}`}
       style={{
         display: 'inline-flex',
         alignItems: 'center',
-        gap: size === 'sm' ? '0.5rem' : '0.75rem'
+        gap: gap ?? defaultGap
       }}
     >
       <div
