@@ -1,12 +1,10 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { SERVICES, ServiceItemData } from '../../config/brand';
 import { Container } from '../common/Container';
 import { SectionHeading } from '../common/SectionHeading';
 import { ArrowRight } from 'lucide-react';
 
 export const Services: React.FC = () => {
-  const [activeService, setActiveService] = useState<string>(SERVICES[0].id);
-
   // Minimal monochrome geometric SVG visualizations with brand green accents
   const renderGeometricVisual = (type: ServiceItemData['visualType']) => {
     switch (type) {
@@ -84,75 +82,64 @@ export const Services: React.FC = () => {
 
         {/* Editorial Service Rows */}
         <div className="services-list reveal-init delay-100">
-          {SERVICES.map((service) => {
-            const isHovered = activeService === service.id;
+          {SERVICES.map((service) => (
+            <div key={service.id} className="service-row">
+                {/* Desktop: 1. Numeric index */}
+                <div className="service-number desktop-only">{service.number}</div>
 
-            return (
-              <div
-                key={service.id}
-                className="service-row"
-                onMouseEnter={() => setActiveService(service.id)}
-              >
-                {/* 1. Monospace numeric index */}
-                <div className="service-number">{service.number}</div>
-
-                {/* 2. Service Title */}
-                <div>
+                {/* Desktop: 2. Title & Tagline */}
+                <div className="service-title-col desktop-only">
                   <h3 className="service-title">{service.title}</h3>
-                  <span className="mono-tag" style={{ display: 'block', marginTop: '0.2rem' }}>
-                    {service.tagline}
-                  </span>
+                  <span className="service-tagline mono-tag">{service.tagline}</span>
                 </div>
 
-                {/* 3. Description & Highlights */}
-                <div>
+                {/* Mobile & Tablet: Header with Number, Title, and Tagline */}
+                <div className="service-mobile-header mobile-tab-only">
+                  <span className="service-number">{service.number}.</span>
+                  <h3 className="service-title">{service.title}</h3>
+                  <span style={{ color: 'var(--color-primary)', opacity: 0.5 }}>—</span>
+                  <span className="service-tagline mono-tag">{service.tagline}</span>
+                </div>
+
+                {/* Desktop Content Columns */}
+                <div className="service-desc-col desktop-only">
                   <p className="service-desc">{service.description}</p>
-                  <div
-                    style={{
-                      display: 'flex',
-                      flexWrap: 'wrap',
-                      gap: 'var(--space-2)',
-                      marginTop: 'var(--space-2)'
-                    }}
-                  >
+                  <div className="service-highlights">
                     {service.highlights.map((tag) => (
-                      <span
-                        key={tag}
-                        style={{
-                          fontSize: 'var(--text-micro)',
-                          fontFamily: 'var(--font-mono)',
-                          color: isHovered ? 'var(--color-primary)' : 'var(--color-text-muted)',
-                          transition: 'color var(--duration-fast) var(--ease-standard)'
-                        }}
-                      >
+                      <span key={tag} className="service-tag">
                         +{tag}
                       </span>
                     ))}
                   </div>
                 </div>
 
-                {/* 4. Abstract Minimal Geometric Visualizer */}
-                <div
-                  className="service-visual-col"
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    color: isHovered ? 'var(--color-primary)' : 'var(--color-text-muted)',
-                    transition: 'all var(--duration-normal) var(--ease-standard)',
-                    opacity: isHovered ? 1 : 0.65
-                  }}
-                >
+                <div className="service-visual-col desktop-only">
                   {renderGeometricVisual(service.visualType)}
                 </div>
 
-                {/* 5. Minimal Directional Indicator */}
-                <div className="service-arrow">
+                <div className="service-arrow desktop-only">
                   <ArrowRight size={18} />
                 </div>
+
+                {/* Mobile & Tablet Body: Paragraph on left, Logo/Visualizer beside it on right */}
+                <div className="service-mobile-body mobile-tab-only">
+                  <div className="service-desc-col">
+                    <p className="service-desc">{service.description}</p>
+                    <div className="service-highlights">
+                      {service.highlights.map((tag) => (
+                        <span key={tag} className="service-tag">
+                          +{tag}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className="service-visual-col">
+                    {renderGeometricVisual(service.visualType)}
+                  </div>
+                </div>
               </div>
-            );
-          })}
+          ))}
         </div>
       </Container>
     </section>

@@ -51,8 +51,8 @@ export const BRAND_CONFIG = {
   
   email: 'tirthbusiness9@gmail.com',
   phones: [
-    { display: '8591707971', raw: '8591707971', label: 'Primary' },
-    { display: '9867656115', raw: '9867656115', label: 'Secondary' }
+    { display: '8591707971', raw: '8591707971' },
+    { display: '9867656115', raw: '9867656115' }
   ],
 
   services: ['Websites', 'Automations', 'Agents', 'Chatbots'] as const,

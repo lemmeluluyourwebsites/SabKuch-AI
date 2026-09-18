@@ -147,35 +147,23 @@ export const Contact: React.FC = () => {
                 </div>
               </a>
 
-              {/* Primary Phone */}
-              <a
-                href={`tel:${BRAND_CONFIG.phones[0].raw}`}
-                className="contact-item"
-                aria-label={`Call primary phone ${BRAND_CONFIG.phones[0].display}`}
-              >
-                <div className="contact-icon-box">
-                  <Phone size={18} />
-                </div>
-                <div className="contact-info">
-                  <span className="contact-label">Primary Line</span>
-                  <span className="contact-value">+91 {BRAND_CONFIG.phones[0].display}</span>
-                </div>
-              </a>
-
-              {/* Secondary Phone */}
-              <a
-                href={`tel:${BRAND_CONFIG.phones[1].raw}`}
-                className="contact-item"
-                aria-label={`Call secondary phone ${BRAND_CONFIG.phones[1].display}`}
-              >
-                <div className="contact-icon-box">
-                  <Phone size={18} />
-                </div>
-                <div className="contact-info">
-                  <span className="contact-label">Secondary Line</span>
-                  <span className="contact-value">+91 {BRAND_CONFIG.phones[1].display}</span>
-                </div>
-              </a>
+              {/* Studio Direct Phone Lines */}
+              {BRAND_CONFIG.phones.map((phone) => (
+                <a
+                  key={phone.raw}
+                  href={`tel:${phone.raw}`}
+                  className="contact-item"
+                  aria-label={`Call direct phone ${phone.display}`}
+                >
+                  <div className="contact-icon-box">
+                    <Phone size={18} />
+                  </div>
+                  <div className="contact-info">
+                    <span className="contact-label">Direct Line</span>
+                    <span className="contact-value">+91 {phone.display}</span>
+                  </div>
+                </a>
+              ))}
 
               {/* Turnaround notice */}
               <div

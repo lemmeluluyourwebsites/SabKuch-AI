@@ -98,8 +98,7 @@ export const Footer: React.FC = () => {
                     onMouseEnter={(e) => (e.currentTarget.style.color = 'var(--color-primary)')}
                     onMouseLeave={(e) => (e.currentTarget.style.color = 'var(--color-text-secondary)')}
                   >
-                    <span>{phone.display}</span>
-                    <span className="body-muted">({phone.label})</span>
+                    <span>+91 {phone.display}</span>
                   </a>
                 </li>
               ))}
