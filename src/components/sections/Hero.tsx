@@ -380,7 +380,7 @@ export const Hero: React.FC = () => {
         }
 
         .is-detecting .alien-scan-beam {
-          animation: alienOpticalScan var(--alien-scan-duration) cubic-bezier(0.35, 0, 0.25, 1) forwards;
+          animation: alienOpticalScan var(--alien-scan-duration) linear forwards;
         }
 
         .is-detecting .alien-status-badge {
