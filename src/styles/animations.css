@@ -1,0 +1,102 @@
+/**
+ * Animations & Motion System
+ * Refined, subtle, expensive-feeling micro-animations.
+ */
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideUpFade {
+  from {
+    opacity: 0;
+    transform: translateY(22px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes subtleFloat {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
+}
+
+@keyframes softGlowPulse {
+  0%, 100% {
+    filter: drop-shadow(0 0 25px rgba(133, 254, 1, 0.22));
+  }
+  50% {
+    filter: drop-shadow(0 0 45px rgba(133, 254, 1, 0.42));
+  }
+}
+
+@keyframes lineExpand {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+/* Scroll reveal utility classes */
+.reveal-init {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity var(--duration-slow) var(--ease-standard),
+              transform var(--duration-slow) var(--ease-standard);
+  will-change: opacity, transform;
+}
+
+.reveal-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Stagger delays */
+.delay-100 { transition-delay: 100ms; }
+.delay-200 { transition-delay: 200ms; }
+.delay-300 { transition-delay: 300ms; }
+.delay-400 { transition-delay: 400ms; }
+
+/* Hero specific animation classes */
+.animate-hero-bg {
+  animation: fadeIn 900ms var(--ease-standard) forwards;
+}
+
+.animate-hero-alien {
+  animation: fadeIn 1000ms var(--ease-standard) 100ms both,
+             softGlowPulse 8s ease-in-out infinite;
+}
+
+.animate-hero-text {
+  animation: slideUpFade 800ms var(--ease-standard) 200ms both;
+}
+
+/* Reduced Motion Override */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .reveal-init {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}
