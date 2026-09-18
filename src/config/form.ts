@@ -1,8 +1,6 @@
 /**
  * Inquiry Form Configuration.
- * To integrate with a real backend service (Formspree, Resend, EmailJS, AWS API Gateway, etc.):
- * simply specify the `endpoint` URL below.
- * If endpoint is left empty (""), the client will gracefully operate in interactive simulation mode.
+ * Formspree Endpoint integrated for live email delivery to your inbox.
  */
 
 export interface InquiryFormData {
@@ -23,8 +21,8 @@ export interface FormConfig {
 }
 
 export const FORM_CONFIG: FormConfig = {
-  // Replace with your production webhook or API route (e.g., https://formspree.io/f/xyz or /api/inquiry)
-  endpoint: '',
+  // Live Formspree endpoint
+  endpoint: 'https://formspree.io/f/mrpbbyoe',
   method: 'POST',
   successMessage: 'Thank you. Your inquiry has been received. Our studio will review and follow up shortly.',
   errorMessage: 'Unable to submit inquiry right now. Please reach out directly to tirthbusiness9@gmail.com.',
