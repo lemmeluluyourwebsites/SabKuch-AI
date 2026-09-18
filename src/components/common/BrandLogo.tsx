@@ -32,10 +32,10 @@ export const BrandLogo: React.FC<BrandLogoProps> = ({
   };
 
   const defaultGap = {
-    sm: '0.25rem',
-    md: '0.375rem',
-    lg: '0.45rem',
-    xl: '0.6rem'
+    sm: '2px',
+    md: '4px',
+    lg: '6px',
+    xl: '8px'
   }[size];
 
   return (
@@ -56,6 +56,7 @@ export const BrandLogo: React.FC<BrandLogoProps> = ({
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
+          overflow: 'hidden',
           filter: glow ? 'drop-shadow(0 0 12px rgba(133, 254, 1, 0.45))' : 'none'
         }}
       >
@@ -67,7 +68,8 @@ export const BrandLogo: React.FC<BrandLogoProps> = ({
           style={{
             width: '100%',
             height: '100%',
-            objectFit: 'contain'
+            objectFit: 'contain',
+            transform: 'scale(1.28)'
           }}
           loading="eager"
         />

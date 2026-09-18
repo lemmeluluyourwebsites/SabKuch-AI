@@ -44,8 +44,12 @@ export const Navbar: React.FC = () => {
       }}
     >
       <div
-        className="container flex-between"
+        className="navbar-container flex-between"
         style={{
+          width: '100%',
+          maxWidth: '100%',
+          paddingLeft: 'calc(var(--page-padding) * 0.5)',
+          paddingRight: 'calc(var(--page-padding) * 0.5)',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between'
@@ -128,7 +132,7 @@ export const Navbar: React.FC = () => {
             backgroundColor: 'rgba(6, 7, 7, 0.98)',
             backdropFilter: 'blur(20px)',
             borderBottom: '1px solid var(--color-border)',
-            padding: 'var(--space-6) var(--page-padding)',
+            padding: 'var(--space-6) calc(var(--page-padding) * 0.5)',
             display: 'flex',
             flexDirection: 'column',
             gap: 'var(--space-4)',
